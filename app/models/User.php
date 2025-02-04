@@ -16,42 +16,93 @@ class User extends Model
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        // Ensure database is initialized
         $this->setConnection('default');
     }
 
-    // New method to get user by username
     public static function getUserByUsername($username)
     {
         try {
-            // Using Eloquent to find user by username
-            return self::where('username', $username)->first(); // Returns the first match or null
+            $user = self::where('username', $username)->first();
+            if (!$user) {
+                error_log("No user found with username: " . $username);
+                return null;
+            }
+
+            // Convert to array and ensure password is included
+            $userData = $user->toArray();
+            error_log("Retrieved user data for: " . $username);
+
+            return $userData;
         } catch (\Exception $e) {
-            // Log error if there's any issue
             error_log("Error fetching user by username: " . $e->getMessage());
-            return null; // Return null if there's an error
+            return null;
         }
     }
 
-    public function createUser($username, $password, $role = 'user')
+    public function createUser($username, $plainPassword, $role = 'user')
     {
+
         try {
-            return DB::connection()->transaction(function () use ($username, $password, $role) {
-                // Check if username already exists
+            return DB::transaction(function () use ($username, $plainPassword, $role) {
+                // Check if username exists
                 if (self::where('username', $username)->exists()) {
                     throw new \Exception('Username already exists');
                 }
 
-                return self::create([
+                // Hash the password
+                $hashedPassword = password_hash($plainPassword, PASSWORD_BCRYPT);
+
+                // Debug
+                error_log("Creating user - Username: " . $username);
+                error_log("Creating user - Original password length: " . strlen($plainPassword));
+                error_log("Creating user - Hash length: " . strlen($hashedPassword));
+
+                // Create the user
+                $user = self::create([
                     'username' => $username,
-                    'password' => $password,
+                    'password' => $hashedPassword,
                     'role' => $role
                 ]);
+
+                if (!$user) {
+                    throw new \Exception('Failed to create user');
+                }
+
+                return $user;
             });
         } catch (\Exception $e) {
-            // Add error logging for debugging
             error_log("Error creating user: " . $e->getMessage());
-            throw $e; // Re-throw to be caught by controller
+            throw $e;
+        }
+    }
+
+    // Helper method to verify password
+    public static function verifyPassword($plainPassword, $hashedPassword)
+    {
+        error_log("Verifying password - Length of plain password: " . strlen($plainPassword));
+        error_log("Verifying against hash: " . substr($hashedPassword, 0, 10) . "...");
+
+        $result = password_verify($plainPassword, $hashedPassword);
+        error_log("Password verification result: " . ($result ? 'true' : 'false'));
+
+        return $result;
+    }
+
+    public function updateUserToken($userId, $jwtToken)
+    {
+        try {
+            $user = self::find($userId);
+            if ($user) {
+                if ($user->jwt_token !== $jwtToken) {
+                    $user->jwt_token = $jwtToken;
+                    $user->save();
+                }
+                return true;
+            }
+            return false;
+        } catch (\Exception $e) {
+            error_log("Error updating JWT token: " . $e->getMessage());
+            return false;
         }
     }
 }

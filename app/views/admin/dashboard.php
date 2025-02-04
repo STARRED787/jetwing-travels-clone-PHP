@@ -5,7 +5,7 @@ require_once __DIR__ . '/../../middleware/authMiddleware.php';
 
 use App\Middleware\AuthMiddleware;
 
-$decodedUser = AuthMiddleware::authenticate(['admin']);
+AuthMiddleware::authenticate(['admin']);
 
 echo "Welcome, Admin!";
 

@@ -34,7 +34,12 @@ class JwtUtil
             'exp' => time() + 3600 // Token expires in 1 hour
         ];
 
-        return JWT::encode($payload, self::$secretKey, 'HS256');
+        try {
+            return JWT::encode($payload, self::$secretKey, 'HS256');
+        } catch (Exception $e) {
+            error_log("JWT Creation Error: " . $e->getMessage());
+            return null;  // Return null if token creation fails
+        }
     }
 
     public static function getSecretKey()

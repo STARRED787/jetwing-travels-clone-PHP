@@ -5,12 +5,13 @@ namespace App\Controllers;
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../utils/JwtUtil.php';  // Ensure JWT utility is imported
+require_once __DIR__ . '/../middleware/authMiddleware.php';  // Ensure JWT utility is imported
 
 use App\Models\User;
 use App\Utils\JwtUtil;  // JWT utility class
 use Exception;
+use App\Middleware\AuthMiddleware;  // Import the AuthMiddleware
 
-define('BASE_URL', '/KD-Enterprise/blog-site');
 
 class UserController
 {
@@ -28,14 +29,18 @@ class UserController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $username = $this->validateInput($_POST['username'] ?? '');
-                $password = $this->validateInput($_POST['password'] ?? '');
+                $password = $_POST['password'] ?? ''; // Raw password, don't hash here
 
                 if (empty($username) || empty($password)) {
                     throw new Exception("Username and password are required.");
                 }
 
-                $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-                $result = $this->userModel->createUser($username, $hashedPassword, 'user');
+                // Debug
+                error_log("Registration attempt - Username: " . $username);
+                error_log("Registration - Password length: " . strlen($password));
+
+                // Let the model handle the hashing
+                $result = $this->userModel->createUser($username, $password, 'user');
 
                 if ($result) {
                     echo "<script>
@@ -56,46 +61,58 @@ class UserController
         }
     }
 
+
     // Login User
     public function login()
     {
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $username = $this->validateInput($_POST['username'] ?? '');
-                $password = $this->validateInput($_POST['password'] ?? '');
+                $password = $_POST['password'] ?? ''; // Raw password
 
-                if (empty($username) || empty($password)) {
-                    throw new Exception("Username and password are required.");
-                }
+                error_log("Login attempt - Username: " . $username);
+                error_log("Login - Password length: " . strlen($password));
 
                 $user = $this->userModel->getUserByUsername($username);
+
                 if (!$user) {
                     throw new Exception("User not found.");
                 }
 
+                // Direct password verification
                 if (!password_verify($password, $user['password'])) {
+                    error_log("Password verification failed for user: " . $username);
                     throw new Exception("Invalid password.");
                 }
 
+                // If we get here, password is correct
+                error_log("Password verified successfully for user: " . $username);
 
-                // Generate JWT token with role
+                // JWT Token creation
                 $token = JwtUtil::createToken($user['id'], $user['role']);
+                if (!$token) {
+                    throw new Exception("Failed to create token.");
+                }
 
-
-                // Set JWT token as a secure HTTP-only cookie
-                setcookie('jwt_token', $token, [
+                // Set JWT token in a secure cookie
+                $cookieResult = setcookie('jwt_token', $token, [
                     'expires' => time() + 3600,
                     'path' => '/',
-                    'secure' => true,  // Use HTTPS in production
-                    'httponly' => true, // Prevent JavaScript access
-                    'samesite' => 'Strict' // CSRF protection
+                    'secure' => true,
+                    'httponly' => true,
+                    'samesite' => 'Strict'
                 ]);
 
-                echo "<script>
-                    alert('Login successful! Redirecting...');
-                    window.location.href = '" . BASE_URL . "/app/views/admin/dashboard.php';
-                </script>";
+                if (!$cookieResult) {
+                    throw new Exception("Failed to set JWT cookie.");
+                }
+
+                // Authenticate and redirect
+                AuthMiddleware::authenticate();
+                header('Location: ' . BASE_URL . '/dashboard.php');
                 exit();
+
             } catch (Exception $e) {
                 error_log("Login error: " . $e->getMessage());
                 echo "<script>
@@ -105,6 +122,8 @@ class UserController
             }
         }
     }
+
+
 
     private function validateInput($input)
     {
