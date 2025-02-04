@@ -1,0 +1,20 @@
+{
+    "name": "user/blog-site",
+    "authors": [
+        {
+            "name": "STARRED787",
+            "email": "malithamalshan7@gmail.com"
+        }
+    ],
+    "require": {
+        "firebase/php-jwt": "^6.11",
+        "illuminate/database": "^8.0",
+        "vlucas/phpdotenv": "^5.3",
+        "symfony/http-foundation": "^7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    }
+}
