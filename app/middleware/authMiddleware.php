@@ -7,7 +7,6 @@ require_once __DIR__ . '/../utils/JwtUtil.php';
 use App\Utils\JwtUtil;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-
 use Exception;
 
 define('BASE_URL', '/KD-Enterprise/blog-site');
@@ -16,86 +15,75 @@ class AuthMiddleware
 {
     public static function authenticate($allowed_roles = [])
     {
+        // Initialize JWT Utility
+        JwtUtil::init();
+        $secretKey = JwtUtil::getSecretKey(); // Get the secret key
+
+        $token = null; // Initialize token
+
+        // Retrieve token from session
+        if (!empty($_SESSION['jwt_token'])) {
+            $token = $_SESSION['jwt_token'];
+            error_log("✅ Retrieved JWT Token from session.");
+        }
+
+        // If session token is missing, check Authorization header
+        $headers = getallheaders();
+        if (!$token && isset($headers['Authorization'])) {
+            $authHeader = $headers['Authorization'];
+            if (strpos($authHeader, 'Bearer ') === 0) {
+                $token = substr($authHeader, 7);
+                error_log("✅ Retrieved JWT Token from Authorization header.");
+            }
+        }
+
+        // If still missing, check JWT token in cookie
+        if (!$token && isset($_COOKIE['jwt_token'])) {
+            $token = $_COOKIE['jwt_token'];
+            error_log("✅ Retrieved JWT Token from Cookie.");
+        }
+
+        // If no token is found, redirect to login
+        if (!$token) {
+            error_log("❌ No JWT Token found. Redirecting to login.");
+            echo "<script>alert('Token not provided. Please log in.'); window.location.href = '" . BASE_URL . "/index.php';</script>";
+            exit;
+        }
+
+        // Validate and handle token
+        self::validateToken($token, $allowed_roles, $secretKey);
+    }
+
+    /**
+     * Validate the JWT token and handle the role-based redirection.
+     */
+    private static function validateToken($token, $allowed_roles, $secretKey)
+    {
         try {
-            // Start session to store the token
-            session_start();
+            // Decode the token
+            $decoded = JWT::decode($token, new Key($secretKey, 'HS256'));
+            $_SESSION['jwt_token'] = $token; // Refresh session token
 
-            // Initialize JWT secret key
-            JwtUtil::init();
-            $secretKey = JwtUtil::getSecretKey();
-
-            // Initialize the token variable to null
-            $token = null;
-
-            // Check if the token is available in the Authorization header
-            if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
-                $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
-                if (strpos($authHeader, 'Bearer ') === 0) {
-                    $token = substr($authHeader, 7);
-                }
-            }
-
-            // If no Authorization header, check for a cookie token
-            if (!$token && isset($_COOKIE['jwt_token'])) {
-                $token = $_COOKIE['jwt_token'];
-                // Remove the JWT token from the cookie
-                setcookie('jwt_token', '', time() - 3600, '/', '', false, true); // Expire the cookie
-                unset($_COOKIE['jwt_token']); // Remove the token from $_COOKIE
-            }
-
-            // If no token is found, show an alert and redirect to login
-            if (!$token) {
-                echo "<script>alert('Token not provided. Please log in.'); window.location.href = '" . BASE_URL . "/index.php';</script>";
-                exit;
-            }
-
-            // Ensure token is correctly formatted
-            if (substr_count($token, '.') !== 2) {
-                echo "<script>alert('Invalid token format.'); window.location.href = '" . BASE_URL . "/index.php';</script>";
-                exit;
-            }
-
-            // Log the token for debugging
-            error_log("Received Token: " . $token);
-
-            // Decode JWT Token
-            try {
-                $decoded = JWT::decode($token, new Key($secretKey, 'HS256'));
-                // Store token in session for later use
-                $_SESSION['jwt_token'] = $token;
-                error_log("Decoded Token: " . print_r($decoded, true));
-            } catch (Exception $e) {
-                // Log specific error message for decoding failure
-                error_log("Error decoding token: " . $e->getMessage());
-                echo "<script>alert('Invalid or expired token. Please log in again.'); window.location.href = '" . BASE_URL . "/login.php';</script>";
-                exit;
-            }
-
-            // Check if the user's role is allowed
+            // Role validation
             if (!empty($allowed_roles) && !in_array($decoded->role, $allowed_roles)) {
-                // Redirect with alert: Access denied
-                echo "<script>alert('Access denied'); window.location.href = '" . BASE_URL . "/index.php';</script>";
+                error_log("❌ Access denied for role: " . $decoded->role);
+                echo "<script>alert('Access denied.'); window.location.href = '" . BASE_URL . "/index.php';</script>";
                 exit;
             }
 
-            // Role-based redirection
-            if ($decoded->role === 'admin') {
-                header("Location: " . BASE_URL . "/app/views/admin/dashboard.php");
-                exit();
-            } elseif ($decoded->role === 'user') {
-                header("Location: " . BASE_URL . "/app/views/user/home.php");
-                exit();
-            } else {
-                header("Location: " . BASE_URL . "/index.php");
-                exit();
-            }
+            error_log("✅ JWT Token successfully validated for user ID: " . $decoded->id);
+
+
 
         } catch (Exception $e) {
-            error_log("Error: " . $e->getMessage());
-            // Redirect with alert: Invalid or expired token
+            error_log("❌ JWT Decode Error: " . $e->getMessage());
             echo "<script>alert('Invalid or expired token. Please log in again.'); window.location.href = '" . BASE_URL . "/login.php';</script>";
             exit;
         }
     }
+
+    /**
+     * Redirect the user based on their role.
+     */
 
 }

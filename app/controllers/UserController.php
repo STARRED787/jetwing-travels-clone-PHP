@@ -4,14 +4,13 @@ namespace App\Controllers;
 
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../utils/JwtUtil.php';  // Ensure JWT utility is imported
-require_once __DIR__ . '/../middleware/authMiddleware.php';  // Ensure JWT utility is imported
+require_once __DIR__ . '/../utils/JwtUtil.php';
+require_once __DIR__ . '/../middleware/AuthMiddleware.php';
 
 use App\Models\User;
-use App\Utils\JwtUtil;  // JWT utility class
+use App\Utils\JwtUtil;
+use App\Middleware\AuthMiddleware;
 use Exception;
-use App\Middleware\AuthMiddleware;  // Import the AuthMiddleware
-
 
 class UserController
 {
@@ -20,7 +19,7 @@ class UserController
     public function __construct()
     {
         $this->userModel = new User();
-        JwtUtil::init(); // Ensure secret key is initialized before JWT operations
+        JwtUtil::init();
     }
 
     // Register User
@@ -29,17 +28,12 @@ class UserController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $username = $this->validateInput($_POST['username'] ?? '');
-                $password = $_POST['password'] ?? ''; // Raw password, don't hash here
+                $password = $_POST['password'] ?? '';
 
                 if (empty($username) || empty($password)) {
                     throw new Exception("Username and password are required.");
                 }
 
-                // Debug
-                error_log("Registration attempt - Username: " . $username);
-                error_log("Registration - Password length: " . strlen($password));
-
-                // Let the model handle the hashing
                 $result = $this->userModel->createUser($username, $password, 'user');
 
                 if ($result) {
@@ -54,25 +48,20 @@ class UserController
             } catch (Exception $e) {
                 error_log("Registration error: " . $e->getMessage());
                 echo "<script>
-                    alert('Error: " . $this->getErrorMessage($e->getMessage()) . "');
+                    alert('Error: " . $this->getErrorMessage($e->getMessage()) . "' );
                     window.location.href = '" . BASE_URL . "/index.php';
                 </script>";
             }
         }
     }
 
-
     // Login User
     public function login()
     {
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $username = $this->validateInput($_POST['username'] ?? '');
-                $password = $_POST['password'] ?? ''; // Raw password
-
-                error_log("Login attempt - Username: " . $username);
-                error_log("Login - Password length: " . strlen($password));
+                $password = $_POST['password'] ?? '';
 
                 $user = $this->userModel->getUserByUsername($username);
 
@@ -80,50 +69,52 @@ class UserController
                     throw new Exception("User not found.");
                 }
 
-                // Direct password verification
                 if (!password_verify($password, $user['password'])) {
-                    error_log("Password verification failed for user: " . $username);
                     throw new Exception("Invalid password.");
                 }
 
-                // If we get here, password is correct
-                error_log("Password verified successfully for user: " . $username);
-
-                // JWT Token creation
+                // Generate JWT Token
                 $token = JwtUtil::createToken($user['id'], $user['role']);
                 if (!$token) {
                     throw new Exception("Failed to create token.");
+                } else {
+                    error_log("Successfully created token: " . $token);
+
+                    // Start session
+                    session_start();
+
+                    // Regenerate session ID to prevent session fixation attacks
+                    session_regenerate_id(true);
+
+                    // Store the token in a session
+                    $_SESSION['jwt_token'] = $token;
+
+                    // Store the token in a cookie (optional)
+                    setcookie('jwt_token', $token, time() + 3600, "/", "", true, true); // Secure flag for HTTPS
+
+                    // After successful login, redirect to the dashboard
+                    if ($user['role'] === 'admin') {
+                        echo "<script>
+                        alert('Login successful! Redirecting Admin Dashboard...');
+                        window.location.href = '" . BASE_URL . "/app/views/admin/dashboard.php';
+                      </script>";
+                    } else {
+                        echo "<script>
+        alert('Login successful! Redirecting to User Home...');
+        window.location.href = '" . BASE_URL . "/app/views/user/home.php';
+      </script>";
+                    }
+                    exit();
                 }
-
-                // Set JWT token in a secure cookie
-                $cookieResult = setcookie('jwt_token', $token, [
-                    'expires' => time() + 3600,
-                    'path' => '/',
-                    'secure' => true,
-                    'httponly' => true,
-                    'samesite' => 'Strict'
-                ]);
-
-                if (!$cookieResult) {
-                    throw new Exception("Failed to set JWT cookie.");
-                }
-
-                // Authenticate and redirect
-                AuthMiddleware::authenticate();
-                header('Location: ' . BASE_URL . '/dashboard.php');
-                exit();
-
             } catch (Exception $e) {
                 error_log("Login error: " . $e->getMessage());
                 echo "<script>
-                    alert('Error: " . $this->getErrorMessage($e->getMessage()) . "');
+                    alert('Error: " . $this->getErrorMessage($e->getMessage()) . "' );
                     window.location.href = '" . BASE_URL . "/index.php';
                 </script>";
             }
         }
     }
-
-
 
     private function validateInput($input)
     {
@@ -143,4 +134,3 @@ class UserController
         }
     }
 }
-?>

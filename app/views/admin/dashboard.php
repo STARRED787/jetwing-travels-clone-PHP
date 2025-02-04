@@ -1,13 +1,15 @@
 <?php
 
-// trigger the AuthMiddleware to authenticate the user
+// Include the necessary middleware for authentication
 require_once __DIR__ . '/../../middleware/authMiddleware.php';
 
 use App\Middleware\AuthMiddleware;
 
-AuthMiddleware::authenticate(['admin']);
+// Authenticate the user before accessing the admin dashboard
+AuthMiddleware::authenticate(['admin']);  // Only allow 'admin' role to access the dashboard
 
-echo "Welcome, Admin!";
+// Your admin dashboard content goes here
+echo "Welcome, Admin! This is your dashboard.";
 
 ?>
 <!DOCTYPE html>

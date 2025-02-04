@@ -28,7 +28,7 @@ class JwtUtil
     {
         $payload = [
             'iss' => "blog-site",
-            'sub' => $userId,
+            'id' => $userId,
             'role' => $role, // Add user role
             'iat' => time(),
             'exp' => time() + 3600 // Token expires in 1 hour

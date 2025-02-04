@@ -28,6 +28,10 @@
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Login</button>
                         </form>
+                        <!-- Sign Up Link -->
+                        <div class="text-center mt-3">
+                            <p>Don't have an account? <a href="../blog-site/app/views/signup.php">Sign up</a></p>
+                        </div>
 
                     </div>
                 </div>
