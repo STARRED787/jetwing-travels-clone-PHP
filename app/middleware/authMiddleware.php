@@ -9,6 +9,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Exception;
 
+define('BASE_URL', '/KD-Enterprise/blog-site');
 class AuthMiddleware
 {
     public static function authenticate($allowed_roles = [])
@@ -34,8 +35,8 @@ class AuthMiddleware
             }
 
             if (!$token) {
-                header("HTTP/1.1 401 Unauthorized");
-                echo json_encode(["error" => "Token not provided"]);
+                // Redirect with alert: Token not provided
+                echo "<script>alert('Token not provided'); window.location.href ='" . BASE_URL . "/index.php';</script>";
                 exit;
             }
 
@@ -44,16 +45,16 @@ class AuthMiddleware
 
             // Check if the user's role is allowed
             if (!empty($allowed_roles) && !in_array($decoded->role, $allowed_roles)) {
-                header("HTTP/1.1 403 Forbidden");
-                echo json_encode(["error" => "Access denied"]);
+                // Redirect with alert: Access denied
+                echo "<script>alert('Access denied'); window.location.href = '" . BASE_URL . "/index.php';</script>";
                 exit;
             }
 
             return $decoded; // Token is valid, return user data
 
         } catch (Exception $e) {
-            header("HTTP/1.1 401 Unauthorized");
-            echo json_encode(["error" => "Invalid or expired token", "message" => $e->getMessage()]);
+            // Redirect with alert: Invalid or expired token
+            echo "<script>alert('Invalid or expired token'); window.location.href = '" . BASE_URL . "/index.php';</script>";
             exit;
         }
     }
