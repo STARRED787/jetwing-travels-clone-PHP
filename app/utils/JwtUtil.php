@@ -14,11 +14,8 @@ class JwtUtil
     public static function init()
     {
         // Load .env file
-        $dotenv = Dotenv::createImmutable(__DIR__ . '/../..');
+        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
         $dotenv->load();
-
-        // Debug: Print all environment variables
-        var_dump($_ENV);
 
         self::$secretKey = $_ENV['JWT_SECRET'] ?? null;
 
@@ -27,15 +24,21 @@ class JwtUtil
         }
     }
 
-    public static function createToken($userId)
+    public static function createToken($userId, $role)
     {
         $payload = [
             'iss' => "blog-site",
             'sub' => $userId,
+            'role' => $role, // Add user role
             'iat' => time(),
             'exp' => time() + 3600 // Token expires in 1 hour
         ];
 
         return JWT::encode($payload, self::$secretKey, 'HS256');
+    }
+
+    public static function getSecretKey()
+    {
+        return self::$secretKey;
     }
 }

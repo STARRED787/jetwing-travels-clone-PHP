@@ -77,8 +77,10 @@ class UserController
                     throw new Exception("Invalid password.");
                 }
 
-                // Generate JWT token
-                $token = JwtUtil::createToken($user['id']);
+
+                // Generate JWT token with role
+                $token = JwtUtil::createToken($user['id'], $user['role']);
+
 
                 // Set JWT token as a secure HTTP-only cookie
                 setcookie('jwt_token', $token, [
