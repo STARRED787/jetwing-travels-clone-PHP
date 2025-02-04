@@ -91,7 +91,7 @@ class UserController
 
                 echo "<script>
                     alert('Login successful! Redirecting...');
-                    window.location.href = '" . BASE_URL . "/views/admin/dashboard.php';
+                    window.location.href = '" . BASE_URL . "/app/views/admin/dashboard.php';
                 </script>";
                 exit();
             } catch (Exception $e) {
