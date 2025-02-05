@@ -21,12 +21,6 @@ class AuthMiddleware
 
         $token = null; // Initialize token
 
-        // Retrieve token from session
-        if (!empty($_SESSION['jwt_token'])) {
-            $token = $_SESSION['jwt_token'];
-            error_log("✅ Retrieved JWT Token from session.");
-        }
-
         // If session token is missing, check Authorization header
         $headers = getallheaders();
         if (!$token && isset($headers['Authorization'])) {

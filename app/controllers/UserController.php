@@ -80,15 +80,6 @@ class UserController
                 } else {
                     error_log("Successfully created token: " . $token);
 
-                    // Start session
-                    session_start();
-
-                    // Regenerate session ID to prevent session fixation attacks
-                    session_regenerate_id(true);
-
-                    // Store the token in a session
-                    $_SESSION['jwt_token'] = $token;
-
                     // Store the token in a cookie (optional)
                     setcookie('jwt_token', $token, time() + 3600, "/", "", true, true); // Secure flag for HTTPS
 
