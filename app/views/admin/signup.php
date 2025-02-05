@@ -1,6 +1,6 @@
 <?php
 
-define('BASE_URL', '/KD-Enterprise/blog-site');
+define('BASE_URL', '/KD-Enterprise/jetwing-travels-clone');
 
 // Include the necessary middleware for authentication
 require_once __DIR__ . '/../../middleware/adminauthMiddleware.php';
