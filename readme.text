@@ -5,3 +5,18 @@
  User sign up page link  - http://localhost/KD-Enterprise/jetwing-travels-clone/app/views/admin/signup.php
  Table Migration - php c:/xampp/htdocs/KD-Enterprise/jetwing-travels-clone/app/migrations/create_users_table.php
  DB_NAME=jetwing_db
+
+ if wanted intall that package allready i installed 
+Composer			        composer init
+JWT (Authentication)		composer require firebase/php-jwt
+Eloquent ORM			    composer require illuminate/database
+.env Support			    composer require vlucas/phpdotenv
+Cookies (Optional)		    composer require symfony/http-foundation
+
+Core PHP STACK 
+
+Frontend		    HTML, Bootstrap, jQuery (AJAX)
+Backend			    Core PHP (MVC)
+Database		    MySQL with Eloquent ORM
+Authentication		JWT Token (Stored in Cookie)
+
