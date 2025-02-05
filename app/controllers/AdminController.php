@@ -5,7 +5,7 @@ namespace App\Controllers;
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../utils/JwtUtil.php';
-require_once __DIR__ . '/../middleware/AuthMiddleware.php';
+require_once __DIR__ . '/../middleware/adminauthMiddleware.php';
 
 use App\Models\User;
 use App\Utils\JwtUtil;
