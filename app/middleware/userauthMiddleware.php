@@ -61,7 +61,7 @@ class userauthMiddleware
             // Role validation
             if (!empty($allowed_roles) && !in_array($decoded->role, $allowed_roles)) {
                 error_log("❌ Access denied for role: " . $decoded->role);
-                echo "<script>alert('Access denied.'); window.location.href = '" . BASE_URL . "/index.php';</script>";
+                echo "<script>alert('Access denied.'); window.location.href = '" . BASE_URL . "/app/views/admin/dashboard.php';</script>";
                 exit;
             }
 

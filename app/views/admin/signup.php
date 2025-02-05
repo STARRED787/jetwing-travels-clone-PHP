@@ -2,7 +2,16 @@
 
 define('BASE_URL', '/KD-Enterprise/blog-site');
 
+// Include the necessary middleware for authentication
+require_once __DIR__ . '/../../middleware/adminauthMiddleware.php';
+
+use App\Middleware\adminauthMiddleware;
+
+// Authenticate the user before accessing the admin dashboard
+adminauthMiddleware::authenticate(['admin']);  // Only allow 'admin' role to access the dashboard
+
 ?>
+
 
 
 <!DOCTYPE html>

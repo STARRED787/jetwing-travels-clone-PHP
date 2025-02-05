@@ -71,7 +71,7 @@ class adminauthMiddleware
 
         } catch (Exception $e) {
             error_log("❌ JWT Decode Error: " . $e->getMessage());
-            echo "<script>alert('Invalid or expired token. Please log in again.'); window.location.href = '" . BASE_URL . "/login.php';</script>";
+            echo "<script>alert('Invalid or expired token. Please log in again.'); window.location.href = '" . BASE_URL . "/app/views/admin/signin.php';</script>";
             exit;
         }
     }
