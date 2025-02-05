@@ -1,0 +1,87 @@
+#navbar {
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+}
+
+/* Default navbar style before scrolling */
+.navbar {
+  background: transparent; /* Initially transparent */
+}
+
+/* Default text color before scrolling */
+.navbar .navbar-nav .nav-link {
+  color: white !important;
+  transition: color 0.3s ease;
+}
+
+/* Text color after scrolling */
+.bg-white .navbar-nav .nav-link {
+  color: black !important;
+}
+
+/* Navbar hover effect */
+.navbar-nav .nav-link:hover {
+  color: green !important; /* Green text on hover */
+}
+
+/* Hero Section with Black Overlay */
+.hero-section {
+  position: relative;
+  height: 100vh; /* Full viewport height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Add a semi-transparent black overlay */
+.hero-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(
+    0,
+    0,
+    0,
+    0.2
+  ); /* Adjust opacity (0.5 for 50% transparency) */
+  z-index: 1;
+}
+
+/* Hero text styling */
+.hero-section h1,
+.hero-section p {
+  color: white;
+  position: relative;
+  z-index: 2; /* Ensure text appears above the overlay */
+}
+
+/* Search Bar Styling */
+.search-bar {
+  display: none; /* Hidden by default */
+  position: absolute;
+  top: 60px; /* Position below the navbar */
+  right: 20px;
+  background: white;
+  padding: 5px;
+  border-radius: 5px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 200px;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+.no-margin {
+  margin-top: 0; /* Removes space above h2 */
+}
