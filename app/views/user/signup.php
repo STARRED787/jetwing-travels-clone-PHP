@@ -24,7 +24,7 @@ define('BASE_URL', '/KD-Enterprise/blog-site');
                 <div class="card shadow-lg">
                     <div class="card-body">
                         <h4 class="text-center">Sign Up</h4>
-                        <form action="../handlers/signupHandler.php" method="POST">
+                        <form action="../handlers/usersignupHandler.php" method="POST">
                             <div class="mb-3">
                                 <label class="form-label">Username</label>
                                 <input type="text" name="username" class="form-control" required>
@@ -37,7 +37,7 @@ define('BASE_URL', '/KD-Enterprise/blog-site');
                         </form>
                         <!-- Sign In Link -->
                         <div class="text-center mt-3">
-                            <p>Have an account?<a href="<?php echo BASE_URL; ?>/index.php">login here</a> </p>
+                            <p>Have an account?<a href="./signin.php">login here</a> </p>
                         </div>
 
                     </div>

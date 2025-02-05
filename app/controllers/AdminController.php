@@ -12,7 +12,7 @@ use App\Utils\JwtUtil;
 use App\Middleware\AuthMiddleware;
 use Exception;
 
-class UserController
+class AdminController
 {
     private $userModel;
 

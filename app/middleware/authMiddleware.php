@@ -76,8 +76,6 @@ class AuthMiddleware
         }
     }
 
-    /**
-     * Redirect the user based on their role.
-     */
+
 
 }
