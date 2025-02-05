@@ -101,7 +101,7 @@ class UserController
                 error_log("Login error: " . $e->getMessage());
                 echo "<script>
                     alert('Error: " . $this->getErrorMessage($e->getMessage()) . "' );
-                    window.location.href = '" . BASE_URL . "/index.php';
+                     window.location.href = '" . BASE_URL . "/app/views/user/signin.php';
                 </script>";
             }
         }

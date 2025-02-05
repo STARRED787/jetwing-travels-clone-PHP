@@ -37,7 +37,7 @@ define('BASE_URL', '/KD-Enterprise/blog-site');
                         </form>
                         <!-- Sign In Link -->
                         <div class="text-center mt-3">
-                            <p>Have an account?<a href="<?php echo BASE_URL; ?>/index.php">login here</a> </p>
+                            <p>Have an account?<a href="./signin.php">login here</a> </p>
                         </div>
 
                     </div>

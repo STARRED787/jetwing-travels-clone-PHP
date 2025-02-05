@@ -101,7 +101,7 @@ class AdminController
                 error_log("Login error: " . $e->getMessage());
                 echo "<script>
                     alert('Error: " . $this->getErrorMessage($e->getMessage()) . "' );
-                    window.location.href = '" . BASE_URL . "/index.php';
+                    window.location.href = '" . BASE_URL . "/app/views/admin/signin.php';
                 </script>";
             }
         }
