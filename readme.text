@@ -1,0 +1,7 @@
+ composor download link https://getcomposer.org/Composer-Setup.exe
+ User sign in page link - http://localhost/KD-Enterprise/jetwing-travels-clone/app/views/user/signin.php
+ User sign up page link  - http://localhost/KD-Enterprise/jetwing-travels-clone/app/views/user/signup.php
+ User sign in page link - http://localhost/KD-Enterprise/jetwing-travels-clone/app/views/admin/signin.php
+ User sign up page link  - http://localhost/KD-Enterprise/jetwing-travels-clone/app/views/admin/signup.php
+ Table Migration - php c:/xampp/htdocs/KD-Enterprise/jetwing-travels-clone/app/migrations/create_users_table.php
+ DB_NAME=jetwing_db
