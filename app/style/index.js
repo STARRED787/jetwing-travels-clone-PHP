@@ -1,41 +1,38 @@
-// Function to change navbar color on scroll
-window.onscroll = function () {
-  changeNavbarColor();
-};
-
-function changeNavbarColor() {
+document.addEventListener("DOMContentLoaded", function () {
   var navbar = document.getElementById("navbar");
   var navLinks = document.querySelectorAll(".navbar-nav .nav-link");
+  var toggler = document.querySelector(".navbar-toggler");
+  var searchBar = document.getElementById("searchBar");
+  var searchIcon = document.getElementById("searchIcon");
 
-  if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
-    navbar.classList.add("bg-white", "shadow"); // Add white background and shadow
-    navbar.classList.remove("navbar-light");
-    navbar.classList.add("navbar-dark");
+  // Function to change navbar color on scroll
+  window.addEventListener("scroll", function () {
+    if (window.scrollY > 50) {
+      navbar.classList.add("bg-white", "shadow");
+      navbar.classList.remove("navbar-light");
+      navbar.classList.add("navbar-dark");
 
-    // Change text color to black
-    navLinks.forEach((link) => {
-      link.style.color = "black";
-    });
-  } else {
-    navbar.classList.remove("bg-white", "shadow");
-    navbar.classList.add("navbar-light");
-    navbar.classList.remove("navbar-dark");
-
-    // Change text color back to white (default)
-    navLinks.forEach((link) => {
-      link.style.color = "white";
-    });
-  }
-}
-
-document
-  .getElementById("searchIcon")
-  .addEventListener("click", function (event) {
-    event.preventDefault(); // Prevent default anchor click behavior
-    let searchBar = document.getElementById("searchBar");
-    if (searchBar.style.display === "none" || searchBar.style.display === "") {
-      searchBar.style.display = "block"; // Show search bar
+      // Change text color to black
+      navLinks.forEach((link) => (link.style.color = "black"));
     } else {
-      searchBar.style.display = "none"; // Hide search bar
+      navbar.classList.remove("bg-white", "shadow");
+      navbar.classList.add("navbar-light");
+      navbar.classList.remove("navbar-dark");
+
+      // Change text color back to white
+      navLinks.forEach((link) => (link.style.color = "white"));
     }
   });
+
+  // Change navbar background when toggler is clicked (for mobile)
+  toggler.addEventListener("click", function () {
+    navbar.classList.toggle("navbar-black");
+  });
+
+  // Toggle search bar on click
+  searchIcon.addEventListener("click", function (event) {
+    event.preventDefault();
+    searchBar.style.display =
+      searchBar.style.display === "block" ? "none" : "block";
+  });
+});
