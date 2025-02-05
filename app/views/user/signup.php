@@ -1,10 +1,3 @@
-<?php
-
-define('BASE_URL', '/KD-Enterprise/blog-site');
-
-?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,7 +17,7 @@ define('BASE_URL', '/KD-Enterprise/blog-site');
                 <div class="card shadow-lg">
                     <div class="card-body">
                         <h4 class="text-center">Sign Up</h4>
-                        <form action="../handlers/usersignupHandler.php" method="POST">
+                        <form action="../../handlers/usersignupHandler.php" method="POST">
                             <div class="mb-3">
                                 <label class="form-label">Username</label>
                                 <input type="text" name="username" class="form-control" required>

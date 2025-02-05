@@ -88,12 +88,12 @@ class AdminController
                         echo "<script>
                         alert('Login successful! Redirecting Admin Dashboard...');
                         window.location.href = '" . BASE_URL . "/app/views/admin/dashboard.php';
-                      </script>";
+                      </script> ";
                     } else {
                         echo "<script>
-        alert('Login unsuccessful! Redirecting to login...');
-        window.location.href = '" . BASE_URL . "/app/views/admin/signin.php';
-      </script>";
+                        alert('Login unsuccessful! User role is.....: " . $user['role'] . "');
+                        window.location.href = '" . BASE_URL . "/app/views/admin/signin.php';
+                    </script>";
                     }
                     exit();
                 }

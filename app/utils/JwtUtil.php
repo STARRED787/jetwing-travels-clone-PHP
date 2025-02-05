@@ -27,7 +27,7 @@ class JwtUtil
     public static function createToken($userId, $role)
     {
         $payload = [
-            'iss' => "blog-site",
+            'iss' => "jetwing-travels-clone",
             'id' => $userId,
             'role' => $role, // Add user role
             'iat' => time(),
