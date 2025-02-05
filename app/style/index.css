@@ -35,61 +35,42 @@
 /* Navbar background turns white when scrolled */
 .bg-white {
   background: white !important;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* Hero Section */
-.hero-section {
-  position: relative;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  background-size: cover;
-  background-position: center;
-}
-
-/* Black overlay on hero section */
-.hero-section::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.2);
-  z-index: 1;
-}
-
-/* Hero text styling */
-.hero-section h1,
-.hero-section p {
-  color: white;
-  position: relative;
-  z-index: 2;
-}
-
-/* Search Bar Styling */
-.search-bar {
-  display: none;
-  position: absolute;
-  top: 60px;
-  right: 20px;
-  background: white;
-  padding: 5px;
-  border-radius: 5px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  width: 200px;
+  /* Soft shadow */
 }
 
-.search-bar input {
-  width: 100%;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
+/* Ensure toggler button is visible and styled */
+.navbar-toggler {
+  border: none;
+  /* Remove default border */
+  background-color: transparent;
+  /* Default state */
+  transition: background-color 0.3s ease;
 }
 
-.no-margin {
-  margin-top: 0;
+/* Change background when scrolling */
+.bg-white .navbar-toggler {
+  background-color: white !important;
+  /* Full black background */
+  border-radius: 5px;
+}
+
+/* Change toggler icon color after scrolling */
+.bg-white .navbar-toggler-icon {
+  filter: invert(1);
+  /* Makes the icon white */
+}
+
+/* Default toggler icon color */
+.navbar-toggler-icon {
+  filter: invert(1);
+  /* Makes the icon white initially */
+}
+
+/* When navbar is expanded */
+.navbar-toggler:focus,
+.navbar-toggler:active {
+  outline: none;
+  background-color: rgba(148, 148, 148, 0.589) !important;
+  /* Keep background black when active */
 }

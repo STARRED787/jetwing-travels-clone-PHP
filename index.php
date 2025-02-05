@@ -14,6 +14,9 @@
 
     <link rel="stylesheet" href="./app/style/index.css">
 </head>
+<style>
+
+</style>
 
 <body>
     <!-- Navigation Panel (Transparent Navbar) -->
@@ -68,7 +71,7 @@
         <div class="container">
             <div class="row align-items-center"> <!-- Bootstrap row to align columns properly -->
                 <!-- Text Column -->
-                <div class="col-md-6 col-12">
+                <div class="col-md-6 col-12 mt-5">
                     <h2>Welcome to Jetwing Travels</h2>
                     <h3>The Home of Sri Lankan Hospitality</h3>
                     <p><strong>Learn More About Us</strong></p>
