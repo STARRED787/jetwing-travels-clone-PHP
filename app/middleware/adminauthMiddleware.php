@@ -56,12 +56,12 @@ class adminauthMiddleware
         try {
             // Decode the token
             $decoded = JWT::decode($token, new Key($secretKey, 'HS256'));
-            $_SESSION['jwt_token'] = $token; // Refresh session token
+
 
             // Role validation
             if (!empty($allowed_roles) && !in_array($decoded->role, $allowed_roles)) {
                 error_log("❌ Access denied for role: " . $decoded->role);
-                echo "<script>alert('Access denied.'); window.location.href = '" . BASE_URL . "/index.php';</script>";
+                echo "<script>alert('Access denied.'); window.location.href = '" . BASE_URL . "/app/views/user/profile.php';</script>";
                 exit;
             }
 

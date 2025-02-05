@@ -56,7 +56,7 @@ class userauthMiddleware
         try {
             // Decode the token
             $decoded = JWT::decode($token, new Key($secretKey, 'HS256'));
-            $_SESSION['jwt_token'] = $token; // Refresh session token
+
 
             // Role validation
             if (!empty($allowed_roles) && !in_array($decoded->role, $allowed_roles)) {
