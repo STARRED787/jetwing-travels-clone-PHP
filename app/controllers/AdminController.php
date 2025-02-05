@@ -39,7 +39,7 @@ class AdminController
                 if ($result) {
                     echo "<script>
                         alert('Registration successful! Redirecting to login page...');
-                        window.location.href = '" . BASE_URL . "/index.php';
+                        window.location.href = '" . BASE_URL . "/app/views/admin/signin.php';
                     </script>";
                     exit();
                 } else {
@@ -49,7 +49,7 @@ class AdminController
                 error_log("Registration error: " . $e->getMessage());
                 echo "<script>
                     alert('Error: " . $this->getErrorMessage($e->getMessage()) . "' );
-                    window.location.href = '" . BASE_URL . "/index.php';
+                    window.location.href = '" . BASE_URL . "/app/views/admin/signin.php';
                 </script>";
             }
         }
@@ -87,12 +87,12 @@ class AdminController
                     if ($user['role'] === 'admin') {
                         echo "<script>
                         alert('Login successful! Redirecting Admin Dashboard...');
-                        window.location.href = '/dashboard.php';
+                        window.location.href = '" . BASE_URL . "/app/views/admin/dashboard.php';
                       </script>";
                     } else {
                         echo "<script>
-        alert('Login successful! Redirecting to User Home...');
-        window.location.href = '" . BASE_URL . "/app/views/user/home.php';
+        alert('Login unsuccessful! Redirecting to login...');
+        window.location.href = '" . BASE_URL . "/app/views/admin/signin.php';
       </script>";
                     }
                     exit();

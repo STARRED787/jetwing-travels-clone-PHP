@@ -9,9 +9,9 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Exception;
 
-define('BASE_URL', '/KD-Enterprise/blog-site');
+define('BASE_URL', '/KD-Enterprise/jetwing-travels-clone');
 
-class AuthMiddleware
+class adminauthMiddleware
 {
     public static function authenticate($allowed_roles = [])
     {
@@ -40,7 +40,7 @@ class AuthMiddleware
         // If no token is found, redirect to login
         if (!$token) {
             error_log("❌ No JWT Token found. Redirecting to login.");
-            echo "<script>alert('Token not provided. Please log in.'); window.location.href = '" . BASE_URL . "/index.php';</script>";
+            echo "<script>alert('Token not provided. Please log in.'); window.location.href = '" . BASE_URL . "/app/views/admin/signin.php';</script>";
             exit;
         }
 

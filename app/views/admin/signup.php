@@ -24,7 +24,7 @@ define('BASE_URL', '/KD-Enterprise/blog-site');
                 <div class="card shadow-lg">
                     <div class="card-body">
                         <h4 class="text-center">Admin Sign Up</h4>
-                        <form action="../../handlers/" method="POST">
+                        <form action="../../handlers/adminsignupHandler.php" method="POST">
                             <div class="mb-3">
                                 <label class="form-label">Username</label>
                                 <input type="text" name="username" class="form-control" required>

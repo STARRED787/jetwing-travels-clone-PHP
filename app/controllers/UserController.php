@@ -39,7 +39,7 @@ class UserController
                 if ($result) {
                     echo "<script>
                         alert('Registration successful! Redirecting to login page...');
-                        window.location.href = '" . BASE_URL . "/index.php';
+                          window.location.href = '" . BASE_URL . "/app/views/user/signin.php';
                     </script>";
                     exit();
                 } else {
@@ -49,7 +49,7 @@ class UserController
                 error_log("Registration error: " . $e->getMessage());
                 echo "<script>
                     alert('Error: " . $this->getErrorMessage($e->getMessage()) . "' );
-                    window.location.href = '" . BASE_URL . "/index.php';
+                     window.location.href = '" . BASE_URL . "/app/views/user/signin.php';
                 </script>";
             }
         }
@@ -84,15 +84,15 @@ class UserController
                     setcookie('jwt_token', $token, time() + 3600, "/", "", true, true); // Secure flag for HTTPS
 
                     // After successful login, redirect to the dashboard
-                    if ($user['role'] === 'admin') {
+                    if ($user['role'] === 'user') {
                         echo "<script>
-                        alert('Login successful! Redirecting Admin Dashboard...');
-                        window.location.href = '/dashboard.php';
+                        alert('Login successful! Redirecting user profile...');
+                        window.location.href = '" . BASE_URL . "/app/views/user/profile.php';
                       </script>";
                     } else {
                         echo "<script>
-        alert('Login successful! Redirecting to User Home...');
-        window.location.href = '" . BASE_URL . "/app/views/user/home.php';
+        alert('Login Unsuccessful! Redirecting to login...');
+        window.location.href = '" . BASE_URL . "/app/views/user/signin.php';
       </script>";
                     }
                     exit();
